@@ -9,4 +9,9 @@ FactoryGirl.define do
       admin true       #sets admin value to "true"
     end
   end
+  
+  factory :micropost do
+    content "Lorem ipsum"
+    user
+  end
 end

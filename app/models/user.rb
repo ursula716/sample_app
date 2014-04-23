@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_many :microposts, dependent: :destroy  #ensures that a user's microposts will be destroyed with them
   before_save { self.email = email.downcase }
   before_create :create_remember_token  #a method that is defined later in the private area of user.rb
   validates :name, presence: true, length: { maximum: 50 }
@@ -16,6 +17,12 @@ class User < ActiveRecord::Base
   def User.hash(token)
     Digest::SHA1.hexdigest(token.to_s)   #storing the hash version of the token, not the actual token/password
     #SHA1 is like a better version of MD5
+  end
+  
+  def feed
+    Micropost.where("user_id = ?", id)
+    #feed should contain all the user's microposts, where the user ID is whatever it is
+    #don't directly interpolate SQL statements
   end
   
   private
